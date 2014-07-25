@@ -11,7 +11,6 @@ use JSON;
 use LWP::UserAgent;
 use Database::DumpTruck;
 
-my $time = time;
 my $this_year = 1900 + [localtime]->[5];
 my $root = new URI 'http://www.digitalnemesto.sk/';
 my $ua = new LWP::UserAgent;
@@ -39,9 +38,22 @@ sub call
 	$params->query_form (procedure => $call, @_);
 	$params->opaque =~ /.(.*)/; # strip leading ? from query params
 	my $uri = new URI ("/getjsondata/$1")->abs ($root);
-	$uri->query_form ('dojo.preventCache' => $time, @_);
+	my $time = time;
 
-	my $response = $ua->get ($uri);
+	warn $uri;
+	# Backend is known to return incomplete responses from time to time
+	my ($response, $response2);
+	do {
+		warn "Retry: Inconsistent response for GET $uri" if $response;
+
+		# First try
+		$uri->query_form ('dojo.preventCache' => $time++, @_);
+		$response = $ua->get ($uri);
+
+		# Verify
+		$uri->query_form ('dojo.preventCache' => $time++, @_);
+		$response2 = $ua->get ($uri);
+	} while (length $response->decoded_content != length $response2->decoded_content);
 	die $response->status_line unless $response->is_success;
 
 	return @{new JSON::XS->utf8->relaxed->decode ($response->decoded_content)->{items}};
