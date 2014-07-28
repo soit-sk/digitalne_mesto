@@ -40,7 +40,6 @@ sub call
 	my $uri = new URI ("/getjsondata/$1")->abs ($root);
 	my $time = time;
 
-	warn $uri;
 	# Backend is known to return incomplete responses from time to time
 	my ($response, $response2);
 	do {
