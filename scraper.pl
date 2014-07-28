@@ -55,7 +55,9 @@ sub call
 	} while (length $response->decoded_content != length $response2->decoded_content);
 	die $response->status_line unless $response->is_success;
 
-	return @{new JSON::XS->utf8->relaxed->decode ($response->decoded_content)->{items}};
+	my $content = $response->decoded_content;
+	$content =~ s/\t/ /g; # https://rt.cpan.org/Ticket/Display.html?id=97558
+	return @{new JSON::XS->utf8->relaxed->decode ($content)->{items}};
 }
 
 # Format into database
