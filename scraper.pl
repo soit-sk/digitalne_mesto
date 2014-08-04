@@ -56,6 +56,14 @@ sub call
 	die $response->status_line unless $response->is_success;
 
 	my $content = $response->decoded_content;
+
+	# This resource used to return HTML with Content-Type: application/json:
+	# http://www.digitalnemesto.sk/getjsondata/procedure=getinvoicesd&idCity=508250000&year=2013?dojo.preventCache=1406818754
+	unless ($content =~ /^[\[{]/) {
+		warn "Skipping: Not a JSON response for GET $uri";
+		return ();
+	}
+
 	$content =~ s/\t/ /g; # https://rt.cpan.org/Ticket/Display.html?id=97558
 	return @{new JSON::XS->utf8->relaxed->decode ($content)->{items}};
 }
