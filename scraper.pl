@@ -46,11 +46,11 @@ sub call
 		warn "Retry: Inconsistent response for GET $uri" if $response;
 
 		# First try
-		$uri->query_form ('dojo.preventCache' => $time++, @_);
+		$uri->query_form (['dojo.preventCache' => $time++]);
 		$response = $ua->get ($uri);
 
 		# Verify
-		$uri->query_form ('dojo.preventCache' => $time++, @_);
+		$uri->query_form (['dojo.preventCache' => $time++]);
 		$response2 = $ua->get ($uri);
 	} while (length $response->decoded_content != length $response2->decoded_content);
 	die $response->status_line unless $response->is_success;
