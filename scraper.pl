@@ -94,7 +94,7 @@ sub dotab
 	my $last_var = "$year.$partner->{id}.$tab->{id}.last";
 	my $last_id = eval { $dt->get_var ($last_var) } || 0;
 
-	foreach my $item (idsort(call ("get$tab->{name}", idCity => $partner->{id}, year => $year))) {
+	foreach my $item (idsort(call ("get$tab->{name}", idMesto => $partner->{id}, year => $year))) {
 
 		# Already seen this
 		next unless $item->{id} > $last_id;
