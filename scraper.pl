@@ -67,7 +67,15 @@ sub call
 		return ();
 	}
 
-	$content =~ s/\t/ /g; # https://rt.cpan.org/Ticket/Display.html?id=97558
+	# https://rt.cpan.org/Ticket/Display.html?id=97558
+	warn "Bad tabs for GET $uri" if $content =~ s/\t/ /g;
+
+	# "nazov":"Zmluva na zabezpečenie pozície " supervízora výrob"
+	# "nazov":"Dodatok č.2 k Zmluve o dielo "Keltská ul.""
+	while ($content =~ s/"([^{}:,\[\\]*)"([^{}:,\[]*)"/"$1\\"$2"/g) {
+		warn "Bad quoting for GET $uri";
+	};
+
 	return @{new JSON::XS->utf8->relaxed->decode ($content)->{items}};
 }
 
