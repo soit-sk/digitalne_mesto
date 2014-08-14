@@ -58,7 +58,7 @@ sub call
 		$response2 = $ua->get ($uri);
 
 		last if length $response->decoded_content == length $response2->decoded_content
-			and length $response->decoded_content > 14;
+			and length $response->decoded_content >= 14;
 	}
 	die $response->status_line unless $response->is_success;
 	warn 'Out of tries' unless $retries;
