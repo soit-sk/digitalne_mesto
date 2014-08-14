@@ -42,7 +42,8 @@ sub call
 
 	# Backend is known to return incomplete responses from time to time
 	my ($response, $response2);
-	do {
+	my $retries = 10;
+	while ($retries--) {
 		if ($response) {
 			warn "Retry: Inconsistent response for GET $uri";
 			sleep 1;
@@ -55,8 +56,11 @@ sub call
 		# Verify
 		$uri->query_form (['dojo.preventCache' => $time++]);
 		$response2 = $ua->get ($uri);
-	} while (length $response->decoded_content != length $response2->decoded_content);
+
+		last if length $response->decoded_content == length $response2->decoded_content;
+	}
 	die $response->status_line unless $response->is_success;
+	warn 'Out of tries' unless $retries;
 
 	my $content = $response->decoded_content;
 
