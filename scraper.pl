@@ -12,7 +12,7 @@ use LWP::UserAgent;
 use Database::DumpTruck;
 
 my $this_year = 1900 + [localtime]->[5];
-my $root = new URI 'http://www.digitalnemesto.sk/';
+my $root = new URI 'http://old.digitalnemesto.sk/';
 my $ua = new LWP::UserAgent;
 my $dt = new Database::DumpTruck ({ dbname => 'data.sqlite' });
 
