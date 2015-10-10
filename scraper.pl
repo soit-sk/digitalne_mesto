@@ -92,7 +92,7 @@ sub call
 sub fmt
 {
 	# Merge
-	my %data = map { %$_ } @_;
+	my %data = map { $_ ? %$_ : () } @_;
 
 	# Flatten
 	foreach my $key (keys %data) {
