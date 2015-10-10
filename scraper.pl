@@ -82,6 +82,9 @@ sub call
 		warn "Bad quoting for GET $uri";
 	};
 
+	# Botched escaping: "\'LIENKA\'"
+	$content =~ s/\\'/'/g;
+
 	return @{new JSON::XS->utf8->relaxed->decode ($content)->{items}};
 }
 
