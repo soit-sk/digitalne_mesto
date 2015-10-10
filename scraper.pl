@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 
-# Lubomir Rintel <lkundrak@v3.sk>, 2014
+# Public Domain: Can be used, modified and distributed without any restriction
+# Lubomir Rintel <lkundrak@v3.sk>, 2014, 2015
 
 use strict;
 use warnings;
