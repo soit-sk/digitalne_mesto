@@ -85,7 +85,11 @@ sub call
 	# Botched escaping: "\'LIENKA\'"
 	$content =~ s/\\'/'/g;
 
-	return @{new JSON::XS->utf8->relaxed->decode ($content)->{items}};
+	my $ret = eval { @{new JSON::XS->utf8->relaxed->decode ($content)->{items}} };
+	use Data::Dumper;
+	warn Dumper $content)->{items} unless $ret;
+	die if $@;
+	return $ret;
 }
 
 # Format into database
